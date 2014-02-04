@@ -12,7 +12,7 @@ package datatable
 import (
 	"errors"
 	"fmt"
-	//"os"
+	"log"
 )
 
 type VerboseType bool
@@ -40,6 +40,7 @@ type Table struct {
 	RevData         []DblPair
 	high, low       float64
 	revHigh, revLow float64
+	isSetup bool
 }
 
 var (
@@ -98,10 +99,14 @@ func (d *Table) Setup() error {
 		}
 	}
 	Verbose.Printf("RevData = %v\n", d.RevData)
+	d.isSetup = true
 	return nil
 }
 
 func (d *Table) Dump() {
+	if !d.isSetup {
+		log.Fatalf("Table %s is not setup\n",d.Name)
+	}		
 	fmt.Printf("Name = %s\n", d.Name)
 	fmt.Printf("Data = %v\n", d.Data)
 	fmt.Printf("Reverse Data = %v\n", d.RevData)
@@ -137,6 +142,9 @@ func interp(x1, y1, x2, y2, v float64) (rc float64, err error) {
 }
 
 func (d *Table) Eval(v float64) (rc float64, err error) {
+	if !d.isSetup {
+		log.Fatalf("Table %s is not setup\n",d.Name)
+	}		
 	length := len(d.Data)
 	last := length - 1
 	Verbose.Printf("%s : evaluate(%g) with %d items in lookup\n", d.Name, v, length)
@@ -195,6 +203,9 @@ func (d *Table) Eval(v float64) (rc float64, err error) {
 
 // returns multiple hits where appropriate
 func (d *Table) ReverseEval(val float64) (rc []float64, err error) {
+	if !d.isSetup {
+		log.Fatalf("Table %s is not setup\n",d.Name)
+	}		
 	var rv float64
 	rc = make([]float64, 0, 10)
 	length := len(d.Data)
