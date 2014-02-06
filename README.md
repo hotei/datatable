@@ -1,4 +1,3 @@
-
 <center>
 datatable Package
 =================
@@ -55,7 +54,7 @@ Change Log
 
 License
 -------
-The 'dataTable' go package and demo programs are distributed under the Simplified BSD License:
+The 'datatable' go package and demo programs are distributed under the Simplified BSD License:
 
 > 
 > Redistribution and use in source and binary forms, with or without modification, are
