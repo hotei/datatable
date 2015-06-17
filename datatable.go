@@ -40,7 +40,7 @@ type Table struct {
 	RevData         []DblPair
 	high, low       float64
 	revHigh, revLow float64
-	isSetup bool
+	isSetup         bool
 }
 
 var (
@@ -105,12 +105,13 @@ func (d *Table) Setup() error {
 
 func (d *Table) Dump() {
 	if !d.isSetup {
-		log.Fatalf("Table %s is not setup\n",d.Name)
-	}		
-	fmt.Printf("Name = %s\n", d.Name)
+		log.Printf("Table %s was not setup, doing it now...\n", d.Name)
+		d.Setup()
+	}
+	fmt.Printf("\nTable Name = %s\n", d.Name)
 	fmt.Printf("Data = %v\n", d.Data)
 	fmt.Printf("Reverse Data = %v\n", d.RevData)
-	fmt.Printf("Data Length = %d\n", len(d.Data))
+	fmt.Printf("Data Length = %d\n\n", len(d.Data))
 }
 
 func inrange(a, b, c float64) bool {
@@ -143,8 +144,9 @@ func interp(x1, y1, x2, y2, v float64) (rc float64, err error) {
 
 func (d *Table) Eval(v float64) (rc float64, err error) {
 	if !d.isSetup {
-		log.Fatalf("Table %s is not setup\n",d.Name)
-	}		
+		log.Printf("Table %s was not setup, doing it now...\n", d.Name)
+		d.Setup()
+	}
 	length := len(d.Data)
 	last := length - 1
 	Verbose.Printf("%s : evaluate(%g) with %d items in lookup\n", d.Name, v, length)
@@ -204,8 +206,9 @@ func (d *Table) Eval(v float64) (rc float64, err error) {
 // returns multiple hits where appropriate
 func (d *Table) ReverseEval(val float64) (rc []float64, err error) {
 	if !d.isSetup {
-		log.Fatalf("Table %s is not setup\n",d.Name)
-	}		
+		log.Printf("Table %s was not setup, doing it now...\n", d.Name)
+		d.Setup()
+	}
 	var rv float64
 	rc = make([]float64, 0, 10)
 	length := len(d.Data)
